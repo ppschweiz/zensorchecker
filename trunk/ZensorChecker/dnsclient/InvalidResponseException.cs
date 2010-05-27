@@ -1,16 +1,13 @@
-#region
-//
-// Bdev.Net.Dns by Rob Philpott, Big Developments Ltd. Please send all bugs/enhancements to
-// rob@bigdevelopments.co.uk  This file and the code contained within is freeware and may be
-// distributed and edited without restriction.
-// 
-
-#endregion
+/*
+* Bdev.Net.Dns by Rob Philpott, Big Developments Ltd. Please send all bugs/enhancements to
+* rob@bigdevelopments.co.uk  This file and the code contained within is freeware and may be
+* distributed and edited without restriction.
+*/
 
 using System;
 using System.Runtime.Serialization;
 
-namespace Bdev.Net.Dns
+namespace apophis.ZensorChecker.dnsclient
 {
 	/// <summary>
 	/// Thrown when the server delivers a response we are not expecting to hear

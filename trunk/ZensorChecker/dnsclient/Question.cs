@@ -1,16 +1,13 @@
-#region
-//
-// Bdev.Net.Dns by Rob Philpott, Big Developments Ltd. Please send all bugs/enhancements to
-// rob@bigdevelopments.co.uk  This file and the code contained within is freeware and may be
-// distributed and edited without restriction.
-// 
-
-#endregion
+/*
+* Bdev.Net.Dns by Rob Philpott, Big Developments Ltd. Please send all bugs/enhancements to
+* rob@bigdevelopments.co.uk  This file and the code contained within is freeware and may be
+* distributed and edited without restriction.
+*/
 
 using System;
 using System.Text.RegularExpressions;
 
-namespace Bdev.Net.Dns
+namespace apophis.ZensorChecker.dnsclient
 {
 	/// <summary>
 	/// Represents a DNS Question, comprising of a domain to query, the type of query (QTYPE) and the class
@@ -21,13 +18,13 @@ namespace Bdev.Net.Dns
 	public class Question
 	{
 		// A question is these three things combined
-		private readonly string		_domain;
-		private readonly DnsType	_dnsType;
+		private readonly string		domain;
+		private readonly DnsType	dnsType;
 		private readonly DnsClass	_dnsClass;
 
 		// expose them read/only to the world
-		public string	Domain		{ get { return _domain;		}}
-		public DnsType	Type		{ get { return _dnsType;	}}
+		public string	Domain		{ get { return domain;		}}
+		public DnsType	Type		{ get { return dnsType;	}}
 		public DnsClass	Class		{ get { return _dnsClass;	}}
 
 		/// <summary>
@@ -62,8 +59,8 @@ namespace Bdev.Net.Dns
 			}
 
 			// just remember the values
-			_domain = domain;
-			_dnsType = dnsType;
+			this.domain = domain;
+			this.dnsType = dnsType;
 			_dnsClass = dnsClass;
 		}
 
@@ -75,8 +72,8 @@ namespace Bdev.Net.Dns
 		internal Question(Pointer pointer)
 		{
 			// extract from the message
-			_domain = pointer.ReadDomain();
-			_dnsType = (DnsType)pointer.ReadShort();
+			domain = pointer.ReadDomain();
+			dnsType = (DnsType)pointer.ReadShort();
 			_dnsClass = (DnsClass)pointer.ReadShort();
 		}
 	}

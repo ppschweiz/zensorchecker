@@ -17,75 +17,46 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
- 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Net.Sockets;
-using System.Text.RegularExpressions;
 
-using Bdev.Net.Dns;
 
 namespace apophis.ZensorChecker
 {
-	public class SpiderInfo {
-	    
-	    private string url;
-	    
-        public string URL {
-            get { 
-	            return url; 
-	        }
+    public class SpiderInfo
+    {
+
+        private readonly string url;
+
+        public string URL
+        {
+            get
+            {
+                return url;
+            }
         }
-	    
-	    private bool successfullyRetrived;
-	    
-        public bool SuccessfullyRetrived {
-            get { 
-	            return successfullyRetrived; 
-	        }
-            set { 
-	            successfullyRetrived = value; 
-	        }
+
+        public bool SuccessfullyRetrived { get; set; }
+
+        public bool ReadError { get; set; }
+
+        public bool Censored { get; set; }
+
+        private readonly int depth;
+
+        public int Depth
+        {
+            get
+            {
+                return depth;
+            }
         }
-	    
-	    private bool readError; 
-	    
-        public bool ReadError {
-            get { 
-	            return readError; 
-	        }
-            set { 
-	            readError = value; 
-	        }
+
+
+
+        public SpiderInfo(string url, int depth)
+        {
+            this.url = url;
+            this.depth = depth;
         }
-	    
-	    private bool censored;
-	    
-        public bool Censored {
-            get { 
-	            return censored; 
-	        }
-            set { 
-	            censored = value; 
-	        }
-        }
-	    
-	    private int depth;
-	    
-        public int Depth {
-            get { 
-	            return depth; 
-	        }
-        }
-	    
-	    
-	    
-	    public SpiderInfo(string url, int depth) {
-	        this.url = url;
-	        this.depth = depth;
-	    }
-	    
-	}
+
+    }
 }

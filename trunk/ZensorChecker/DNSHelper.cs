@@ -1,13 +1,26 @@
 ﻿/*
- * Erstellt mit SharpDevelop.
- * Benutzer: apophis
- * Datum: 03.05.2009
- * Zeit: 18:08
+ * The ZensorCheker  checks the locally present DNS Server against the
+ * list of Censored Domains to find out if your ISP is censoring you.
  * 
- * Sie können diese Vorlage unter Extras > Optionen > Codeerstellung > Standardheader ändern.
+ *  Copyright (c) 2008-2010 Thomas Bruderer <apophis@apophis.ch>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.NetworkInformation;
 using System.IO;
 using System.Net;
@@ -19,19 +32,19 @@ namespace apophis.ZensorChecker
     /// </summary>
     public class DNSHelper
     {
-        private static IPAddress opendns1 = IPAddress.Parse("208.67.222.222");
+        private static readonly IPAddress Opendns1 = IPAddress.Parse("208.67.222.222");
         
         public static IPAddress OpenDNS1 {
             get {
-                return opendns1;
+                return Opendns1;
             }
         }
 
-        private static IPAddress opendns2 = IPAddress.Parse("208.67.220.220");
+        private static readonly IPAddress Opendns2 = IPAddress.Parse("208.67.220.220");
 
         public static IPAddress OpenDNS2 {
             get {
-                return opendns2;
+                return Opendns2;
             }
         }
         
@@ -40,27 +53,16 @@ namespace apophis.ZensorChecker
                 case PlatformID.Unix:
                     return GetLocalDNSUnix();
                 default:
-                    return GetLocalDNSdotNet2();
+                    return GetLocalDnSdotNet2();
             }
         }
         
-        private static IEnumerable<IPAddress> GetLocalDNSdotNet2() {
-            List<IPAddress> dnsservers = new List<IPAddress>();
-            
-            foreach(NetworkInterface adapter in NetworkInterface.GetAllNetworkInterfaces()) {
-                if ((adapter.OperationalStatus != OperationalStatus.Up) || (adapter.NetworkInterfaceType == NetworkInterfaceType.Loopback)) {
-                    continue;
-                }
-                IPInterfaceProperties properties = adapter.GetIPProperties();
-                foreach(IPAddress serverip in properties.DnsAddresses) {
-                    dnsservers.Add(serverip);
-                }
-            }
-            return dnsservers;
+        private static IEnumerable<IPAddress> GetLocalDnSdotNet2() {
+            return NetworkInterface.GetAllNetworkInterfaces().Where(adapter => (adapter.OperationalStatus == OperationalStatus.Up) && (adapter.NetworkInterfaceType != NetworkInterfaceType.Loopback)).Select(adapter => adapter.GetIPProperties()).SelectMany(properties => properties.DnsAddresses).ToList();
         }
         
         private static IEnumerable<IPAddress> GetLocalDNSUnix() {
-            List<IPAddress> dnsservers = new List<IPAddress>();
+            var dnsservers = new List<IPAddress>();
             string line;
             TextReader resolve = File.OpenText("/etc/resolv.conf");
             while((line = resolve.ReadLine()) != null) {
@@ -74,8 +76,8 @@ namespace apophis.ZensorChecker
         
         
         public static string ReverseDNS(string ip) {
-            IPHostEntry IpEntry = Dns.GetHostEntry(ip);
-            return IpEntry.HostName.ToString();
+            var ipEntry = Dns.GetHostEntry(ip);
+            return ipEntry.HostName;
         }
         
     }
